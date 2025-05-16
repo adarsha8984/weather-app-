@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Weather App</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      background: #e0f7fa;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+    .weather-box {
+      background: #fff;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      text-align: center;
+      width: 300px;
+    }
+    input, button {
+      padding: 10px;
+      margin-top: 10px;
+      width: 100%;
+      font-size: 1rem;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+    button {
+      background: #007acc;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #005fa3;
+    }
+    #result {
+      margin-top: 15px;
+      font-size: 1.1rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="weather-box">
+    <h2>Weather App</h2>
+    <input id="city" type="text" placeholder="Enter city name" />
+    <button onclick="getWeather()">Get Temperature</button>
+    <div id="result"></div>
+  </div>
+
+  <script>
+    async function getWeather() {
+      const city = document.getElementById('city').value;
+      const result = document.getElementById('result');
+      if (!city) {
+        result.textContent = 'Please enter a city name.';
+        return;
+      }
+      result.textContent = 'Loading...';
+      try {
+        const response = await fetch(`http://api.weatherapi.com/v1/current.json?key=24242a7fcb204d2691c130006251605&q=${city}&aqi=yes`);
+        const data = await response.json();
+        if (data.error) {
+          result.textContent = `Error: ${data.error.message}`;
+        } else {
+          result.textContent = `Temperature in ${data.location.name}: ${data.current.temp_c}°C`;
+        }
+      } catch (error) {
+        result.textContent = 'Failed to fetch weather data.';
+      }
+    }
+  </script>
+</body>
+</html>
